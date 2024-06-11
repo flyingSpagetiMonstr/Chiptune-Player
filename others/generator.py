@@ -2,7 +2,20 @@ from enum import Enum, auto
 
 FREQ_DIV = 1e6
 
-class Notes(Enum):
+
+class ArithmeticEnum(Enum):
+    def __add__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__class__((self.value + other.value) % len(self.__class__))
+        return NotImplemented
+
+    def __sub__(self, other):
+        if isinstance(other, self.__class__):
+            return self.__class__((self.value - other.value) % len(self.__class__))
+        return NotImplemented
+
+
+class Notes(ArithmeticEnum):
     O_ = 0
     
     C2 = auto()
@@ -57,6 +70,8 @@ class Notes(Enum):
     AB5 = auto()
     B5 = auto()
 
+ONE = Notes.C2
+
 # print(Notes.O_.name)
 # print(Notes.O_.value)
 
@@ -71,19 +86,11 @@ class Score:
 
 # ==================================
 
-# sound anthem[] = {
-#     {E5, 3}, {O_, 0.25}, {B4, 0.25}, // measure 1
-#     {E5, 1}, {B4, 0.75}, {C5, 0.25}, {D5, 1.0}, {G4, 0.50}, {G4, 0.50}, // measure 2
-#     {C5, 1}, {B4, 0.75}, {A4, 0.25}, {B4, 1.0}, {E4, 0.50}, {E4, 0.50}, // measure 3
-#     {F4, 1}, {F4, 0.75}, {G4, 0.25}, {A4, 1.0}, {A4, 0.75}, {B4, 0.25}, // measure 4
-#     {C5, 1}, {D5, 0.50}, {E5, 0.50}, {F5, 1.5}, {B4, 0.50}, // measure 5
-#     {G5, 1}, {F5, 0.75}, {E5, 0.25}, {F5, 1.0}, {D5, 0.50}, {B4, 0.50}, // measure 6
-#     {E5, 1}, {D5, 0.75}, {C5, 0.25}, {D5, 1.0}, {G4, 0.50}, {G4, 0.50}, // measure 7
-#     {C5, 1}, {B4, 0.75}, {A4, 0.25}, {B4, 1.0}, {E4, 0.75}, {E4, 0.25}, // measure 8
-#     {E5, 1}, {D5, 0.75}, {C5, 0.25}, {B4, 1.5}, {O_, 0.50}, // measure 9
-#     {O_, 2} // ###
-# };
 names = ["anthem", "BWV846", "Ievan_polkka"]
+
+
+
+
 anthem_content = [
     [[Notes.E5, 3], [Notes.O_, 0.25], [Notes.B4, 0.25]],
     [[Notes.E5, 1], [Notes.B4, 0.75], [Notes.C5, 0.25], [Notes.D5, 1.0], [Notes.G4, 0.50], [Notes.G4, 0.50]],
@@ -96,6 +103,19 @@ anthem_content = [
     [[Notes.E5, 1], [Notes.D5, 0.75], [Notes.C5, 0.25], [Notes.B4, 1.5], [Notes.O_, 0.50]],
 ]
 anthem = Score(anthem_content, ["A", "B", "E"], names[0])
+
+BWV846_content = [
+    [[Notes.C4, 0.25], [Notes.E4, 0.25], [Notes.G4, 0.25], [Notes.C5, 0.25], [Notes.E5, 0.25], [Notes.G4, 0.25], [Notes.C5, 0.25], [Notes.E5, 0.25]],
+    [[Notes.C4, 0.25], [Notes.E4, 0.25], [Notes.G4, 0.25], [Notes.C5, 0.25], [Notes.E5, 0.25], [Notes.G4, 0.25], [Notes.C5, 0.25], [Notes.E5, 0.25]],
+
+    [[Notes.C4, 0.25], [Notes.E4 - ONE, 0.25], [Notes.G4 + ONE, 0.25], [Notes.C5 + ONE, 0.25], [Notes.E5 + ONE, 0.25], [Notes.G4 + ONE, 0.25], [Notes.C5 + ONE, 0.25], [Notes.E5 + ONE, 0.25]],
+    [[Notes.C4, 0.25], [Notes.E4 - ONE, 0.25], [Notes.G4 + ONE, 0.25], [Notes.C5 + ONE, 0.25], [Notes.E5 + ONE, 0.25], [Notes.G4 + ONE, 0.25], [Notes.C5 + ONE, 0.25], [Notes.E5 + ONE, 0.25]],
+
+    [[Notes.C4 - ONE, 0.25], [Notes.E4 - ONE, 0.25], [Notes.G4, 0.25], [Notes.C5 + ONE, 0.25], [Notes.E5 + ONE, 0.25], [Notes.G4, 0.25], [Notes.C5 + ONE, 0.25], [Notes.E5 + ONE, 0.25]],
+    [[Notes.C4 - ONE, 0.25], [Notes.E4 - ONE, 0.25], [Notes.G4, 0.25], [Notes.C5 + ONE, 0.25], [Notes.E5 + ONE, 0.25], [Notes.G4, 0.25], [Notes.C5 + ONE, 0.25], [Notes.E5 + ONE, 0.25]],
+]
+
+BWV846 = Score(BWV846_content, [], names[1])
 
 
 
@@ -127,3 +147,5 @@ sound {name}[] = {{
     print(result)
 
 get_data(anthem)
+
+get_data(BWV846)
