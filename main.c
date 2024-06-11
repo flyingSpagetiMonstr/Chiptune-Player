@@ -86,7 +86,6 @@ void play_score(sound *sounds, int sounds_len)
 }
 
 
-// ========================================================
 
 int main(void)
 {
@@ -108,18 +107,13 @@ int main(void)
 
     HAL_TIM_Base_Start_IT(&htim3); //启动定时器3.
 
-    init_score();
-    play_score(anthem, len);
+	// ========================================================
+	// OUR CODE STARTS HERE
+    play_score(anthem, 5);
+    // play_score(anthem, len);
+    // play_score(BWV846, BWV846_len);
+    // play_score(Ievan_polkka, Ievan_polkka_len);
 
-    switch (1)
-    {
-    case 1:
-        /* code */
-        break;
-    
-    default:
-        break;
-    }
     while (1)
     {
         if(flag1 == 1)
