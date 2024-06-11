@@ -41,47 +41,45 @@ void switch_flag(void);
 // =============================================================================================
 // OUR CODE STARTS HERE
 
-#ifndef BEEP
-#define BEEP
-#endif
-
-
 #include "presets.c"
 #include "scores.c"
 
 #define FREQ_DIV ((int)1e6)
 #define FACTOR ((int)(FREQ_DIV/((int)(1e3)))) // FREQ_DIV / 1e3
 // #define UNIT (1/FREQ_DIV)
-#define REST_RATE 0.05
+// #define REST_RATE 0.05
+#define REST_RATE 5
 
 void play_sound(sound s)
 {
-    uint32_t period = periods[s.note];
-    uint32_t half_p = period / 2;
+    uint16_t period = periods[s.note];
+    uint16_t half_p = period / 2;
 
     // uint32_t duration = s.duration / UNIT;
-    uint32_t duration = s.duration * FREQ_DIV;
+    // uint32_t duration = s.duration * FREQ_DIV;
     uint32_t start_time = HAL_GetTick();
 
-    if (s.note == O_)
+    if (s.note == 0)
     {
-        HAL_Delay(duration);
+        HAL_Delay(s.duration);
         return;
     }
 
-    while ((HAL_GetTick() - start_time) < duration * (1 - REST_RATE))
+    // while ((HAL_GetTick() - start_time) < s.duration * (1 - REST_RATE)) // ###
+    while ((HAL_GetTick() - start_time) < (s.duration / 100) * (100 - REST_RATE)) // ###
     {
         HAL_GPIO_WritePin(GPIOG,GPIO_PIN_6,GPIO_PIN_SET);
         HAL_Delay(half_p);
         HAL_GPIO_WritePin(GPIOG,GPIO_PIN_6,GPIO_PIN_RESET);
         HAL_Delay(half_p);
     }
-    HAL_Delay(duration * REST_RATE);
+    // HAL_Delay(s.duration * REST_RATE); // ###
+    HAL_Delay((s.duration / 100) * 5); // ###
 }
 
 void play_score(sound *sounds, int sounds_len)
 {
-    for (int i = 0; i < sounds_len; i++)
+    for (uint16_t i = 0; i < sounds_len; i++)
     {
         play_sound(sounds[i]);
     }
@@ -92,7 +90,7 @@ void play_score(sound *sounds, int sounds_len)
 
 int main(void)
 {
-    /* MCU Configuration----------------------------------------------------------*/
+    /* MCU Configuration----------------------*/
 
     /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
     HAL_Init();
