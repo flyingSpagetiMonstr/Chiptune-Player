@@ -117,6 +117,41 @@ BWV846_content = [
 
 BWV846 = Score(BWV846_content, [], names[1])
 
+Ievan_polkka_content = [
+    [[Notes.A5, 0.5], [Notes.A5, 0.5], [Notes.G5, 0.5], [Notes.F5, 0.25], [Notes.F5, 0.25], 
+        [Notes.E5, 0.5], [Notes.C5, 0.25], [Notes.C5, 0.75], [Notes.E5, 0.5]],
+    [[Notes.G5, 0.5], [Notes.G5, 0.25], [Notes.G5, 0.25], [Notes.F5, 0.5], [Notes.E5, 0.5], 
+        [Notes.E5 + ONE, 0.5], [Notes.C5 + ONE, 0.5], [Notes.C5 + ONE, 0.5], [Notes.E5 + ONE, 0.5]],
+    [[Notes.A5, 0.25], [Notes.A5, 0.25], [Notes.A5, 0.25], [Notes.A5, 0.25], [Notes.G5, 0.5], [Notes.F5, 0.5],
+        [Notes.E5, 0.5], [Notes.C5, 0.25], [Notes.C5, 0.5], [Notes.C5, 0.25], [Notes.E5, 0.5]],
+    [[Notes.G5, 0.25], [Notes.G5, 0.25], [Notes.G5, 0.5], [Notes.F5, 0.5], [Notes.E5, 0.25], [Notes.E5, 0.25],
+        [Notes.F5, 0.5], [Notes.D5, 0.25], [Notes.D5, 1], [Notes.O_, 0.25]],
+    
+    [[Notes.A4, 0.5], [Notes.D5, 0.5], [Notes.D5, 0.75], [Notes.E5, 0.25],
+        [Notes.F5, 0.25], [Notes.F5, 0.25], [Notes.D5, 0.25], [Notes.D5, 0.25], [Notes.D5, 0.5], [Notes.F5, 0.25], [Notes.F5, 0.25]],
+    [[Notes.E5, 0.5], [Notes.C5, 0.5], [Notes.C5, 0.5], [Notes.E5, 0.5],
+        [Notes.F5, 0.5], [Notes.D5, 0.5], [Notes.D5, 0.5], [Notes.D5, 0.25], [Notes.D5, 0.25]],
+    [[Notes.A4, 0.5], [Notes.D5, 0.5], [Notes.D5, 0.75], [Notes.E5, 0.25],
+        [Notes.F5, 0.25], [Notes.O_, 0.25], [Notes.D5, 0.5], [Notes.D5, 0.25], [Notes.D5, 0.25], [Notes.D5, 0.25], [Notes.F5, 0.25]],
+
+    [[Notes.A5, 0.25], [Notes.A5, 0.25], [Notes.A5, 0.25], [Notes.G5, 0.25],
+        [Notes.F5, 0.25], [Notes.O_, 0.25], [Notes.E5, 0.5],
+        [Notes.F5, 0.5], [Notes.D5, 0.25], [Notes.O_, 0.25],
+        [Notes.D5, 0.5], [Notes.D5, 0.25], [Notes.D5, 0.25]],
+    [[Notes.A5, 0.5], [Notes.A5, 0.5], [Notes.G5, 0.5], [Notes.F5, 0.5],
+        [Notes.E5, 0.5], [Notes.C5, 0.25], [Notes.C5, 0.25 + 0.25], [Notes.C5, 0.25], [Notes.C5, 0.25], [Notes.E5, 0.25]],
+    [[Notes.G5, 0.25], [Notes.G5, 0.25], [Notes.G5, 0.25], [Notes.G5, 0.25],
+        [Notes.F5, 0.25], [Notes.F5, 0.25], [Notes.E5, 0.25], [Notes.E5, 0.25],
+        [Notes.F5, 0.5], [Notes.D5, 0.25], [Notes.D5, 0.25 + 0.75], [Notes.D5, 0.25]],
+    [[Notes.A5, 0.5], [Notes.A5, 0.5], [Notes.G5, 0.5], [Notes.F5, 0.5],
+        [Notes.E5, 0.5], [Notes.C5, 0.5],
+        [Notes.C5, 0.25], [Notes.C5, 0.25], [Notes.C5, 0.25], [Notes.E5, 0.25]],
+    [[Notes.G5, 0.25], [Notes.G5, 0.25], [Notes.G5, 0.25], [Notes.G5, 0.25], [Notes.F5, 0.5], [Notes.E5, 0.5],
+        [Notes.F5, 0.5], [Notes.D5, 0.25], [Notes.D5, 0.25 + 1]]
+
+]
+
+Ievan_polkka = Score(Ievan_polkka_content, ["B"], names[2])
 
 
 def get_data(score: Score):
@@ -149,3 +184,5 @@ sound {name}[] = {{
 get_data(anthem)
 
 get_data(BWV846)
+
+get_data(Ievan_polkka)
