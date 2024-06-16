@@ -86,7 +86,6 @@ int main(void)
         {
             flag1 = 0;
             I2C_ZLG7290_Read(&hi2c1, 0x71, 0x01, Rx1_Buffer, 1); //读键值
-            printf("\n\r按键键值 = %#x\r\n", Rx1_Buffer[0]); //想串口发送键值	
             DC_Task(Rx1_Buffer[0]);
         }
         Led(DC_Motor_Data);
