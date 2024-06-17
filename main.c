@@ -60,6 +60,7 @@ void play_sound(sound s);
 void play_score(sound *sounds, int sounds_len);
 
 void state_wait(void);
+void seq_check(uint8_t state, uint8_t last_state);
 
 int main(void)
 {
@@ -104,9 +105,14 @@ int main(void)
 
 
 #if 1
-	uint8_t state = STATE(read_data());
+	uint8_t state = 0, last_state = 0;
+
 	while (1)
 	{
+		state = STATE(read_data());
+		seq_check(state, last_state);
+		last_state = state;
+
 		switch (state)
 		{
 		case WAIT:
@@ -202,6 +208,17 @@ void state_wait(void)
         HAL_Delay(100 * FACTOR);
     }
 }
+
+void seq_check(uint8_t state, uint8_t last_state)
+{
+	if (state == last_state
+		||state >= 1 && last_state >= 1)
+	{
+		warm = 0;
+		HAL_NVIC_SystemReset();
+	}
+}
+
 
 void SystemClock_Config(void)
 {
