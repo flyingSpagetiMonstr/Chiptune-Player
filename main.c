@@ -91,9 +91,7 @@ int main(void)
 #ifdef WARM_ENABLED
 	if(warm == WARM_MARK)
 	{
-		// warm boot
-		// check_backup(&stat_bkp1, &stat_bkp2, &stat_bkp3, 1);
-		// check_backup(&func_bkp1, &func_bkp2, &func_bkp3, 1);
+		// warm boot, doing nothing
 	}
 	else
 	{
@@ -105,7 +103,6 @@ int main(void)
 #endif
 
 
-
 #if 1
 	uint8_t state = STATE(read_data());
 	while (1)
@@ -113,13 +110,15 @@ int main(void)
 		switch (state)
 		{
 		case WAIT:
-			state_wait();
+			state_wait(); // there is a `store_state` at the end of this func
 			break;
 		default: // case PLAY1 PLAY2 PLAY3
 			// state_play:
 			sound* score = scores[state - 1];
 			uint16_t len = lens[state - 1];
 			play_score(score, len);
+
+			store_state(WAIT);
 			break;
 		}
 	}
@@ -193,12 +192,12 @@ void state_wait(void)
 			uint8_t key_read;
             I2C_ZLG7290_Read(&hi2c1, 0x71, 0x01, &key_read, 1); //读键值
 			key_read = TRANSLATE(key_read);
-			if (!(1 <= key_read && key_read <= 3))
-			{
-				continue;
-			}
 
-			store_state(key_read);
+			if (1 <= key_read && key_read <= 3)
+			{
+				store_state(key_read);
+				break;
+			}
         }
         HAL_Delay(100 * FACTOR);
     }

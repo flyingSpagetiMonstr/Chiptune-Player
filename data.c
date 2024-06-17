@@ -7,7 +7,8 @@ typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 // ################################
 
-#define WARM_MARK 0x1234ABCD
+// #define WARM_MARK 0x1234ABCD
+#define WARM_MARK 0xC0DECAFE
 
 #define _R(data) ((data).value & 0xff)
 #define _L(data) ((data).value >> 8)
