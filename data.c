@@ -44,11 +44,14 @@ typedef struct _data_t {
 	uint8_t chksum;
 } data_t;
 
+// 0x20010000 ~ 0x20020000
+// 0x20018000
+// (0) 1 2 3 4 5 6 (7) [8] 9 A B C D E (F)
 data_t data_0 __attribute__((at (0x20010000)));
-data_t data_1 __attribute__((at (0x20014000)));
-data_t data_2 __attribute__((at (0x20018000)));
+data_t data_1 __attribute__((at (0x20017000)));
+data_t data_2 __attribute__((at (0x2001F000)));
 
-uint32_t warm __attribute__((at (0x2001C000)));
+uint32_t warm __attribute__((at (0x20018000)));
 
 // state = indicator = 0
 void init_data(void)
