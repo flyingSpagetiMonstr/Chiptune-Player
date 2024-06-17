@@ -41,6 +41,7 @@ void switch_flag(void);
 
 // =============================================================================================
 // OUR CODE STARTS HERE
+#include "stdlib.h"
 
 #define WARM_ENABLED
 
@@ -84,6 +85,8 @@ int main(void)
 
 	// ========================================================
 	// OUR CODE STARTS HERE
+	srand((unsigned int)HAL_GetTick());
+
     play_score(anthem, 5);
     // play_score(anthem, len);
     // play_score(BWV846, BWV846_len);
@@ -120,11 +123,27 @@ int main(void)
 			break;
 		default: // case PLAY1 PLAY2 PLAY3
 			// state_play:
-			sound* score = scores[state - 1];
-			uint16_t len = lens[state - 1];
-			play_score(score, len);
+			if (rand()%2)
+			{
+				sound* score = scores[state - 1];
+				uint16_t len = lens[state - 1];
+			}
+			else
+			{
+				uint16_t len = lens[state - 1];
+				sound* score = scores[state - 1];
+			}
 
-			store_state(WAIT);
+			if (rand()%2)
+			{
+				play_score(score, len);
+				store_state(WAIT);
+			}
+			else
+			{
+				store_state(WAIT);
+				play_score(score, len);
+			}
 			break;
 		}
 	}
