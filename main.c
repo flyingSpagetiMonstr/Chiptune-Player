@@ -191,8 +191,12 @@ void state_wait(void)
 {
     while (1)
     {
-        if(flag1 == 1)
-        {
+		while (flag1 != 1) {
+            HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+        }
+
+        // if(flag1 == 1)
+        // {
             flag1 = 0;
 
 			uint8_t key_read;
@@ -204,8 +208,8 @@ void state_wait(void)
 				store_state(key_read);
 				break;
 			}
-        }
-        HAL_Delay(100 * FACTOR);
+        // }
+        // HAL_Delay(100 * FACTOR);
     }
 }
 
