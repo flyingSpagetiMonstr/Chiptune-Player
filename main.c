@@ -100,16 +100,26 @@ int main(void)
 
 #endif
 
+
+
 #if 1
-	switch (STATE(data_0))
+	uint8_t state = STATE(read_data());
+	switch (state)
 	{
-	case /* constant-expression */:
-		/* code */
+	case WAIT:
 		break;
-	
+
 	default:
+	// case PLAY1:
+	// case PLAY2:
+	// case PLAY3:
+		score_t score = scores[state - 1];
+		uint16_t len = lens[state - 1];
+		// play(score, len);
+	
 		break;
 	}
+
 	while (1)
 	{
 		if(flag1 == 1)

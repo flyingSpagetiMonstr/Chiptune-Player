@@ -14,7 +14,9 @@ typedef unsigned char uint8_t;
 #define _STORE_CHK(data) (data).chksum = _L(data) ^ _R(data)
 
 // methods for reading from data
+// STATE(read_data() is safe
 #define STATE(data) ((data).value & 0b11) 
+// INDICATOR(read_data() is safe
 #define INDICATOR(data) ((data).value >> 2)
 
 #define IS_VALID(data) ((data).chksum == (_L(data) ^ _R(data)))

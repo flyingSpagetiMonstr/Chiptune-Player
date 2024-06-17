@@ -3,8 +3,8 @@
 
 #include "presets.c"
 
-// #define _BWV846
-// #define IEVAN_POLKKA
+#define _BWV846
+#define IEVAN_POLKKA
 
 // =========================================================
 
@@ -20,7 +20,7 @@ sound anthem[] = {
     {40,  800000}, {39,  600000}, {37,  200000}, {35, 1200000}, { 0,  400000},
     {00, 2000000}
 };
-uint16_t len = sizeof(anthem)/sizeof(sound);
+uint16_t const anthem_len = sizeof(anthem)/sizeof(sound);
 
 
 // =========================================================
@@ -36,7 +36,7 @@ sound BWV846[] = {
     {00, 2000000}
 };
 
-uint16_t BWV846_len = sizeof(BWV846)/sizeof(sound);
+uint16_t const BWV846_len = sizeof(BWV846)/sizeof(sound);
 
 #endif
 
@@ -59,7 +59,13 @@ sound Ievan_polkka[] = {
     {00, 2000000}
 };
 
-uint16_t Ievan_polkka_len = sizeof(Ievan_polkka)/sizeof(sound);
+uint16_t const Ievan_polkka_len = sizeof(Ievan_polkka)/sizeof(sound);
+
+typedef sound *score_t;
+
+score_t scores[3] = {anthem, BWV846, Ievan_polkka};
+uint16_t lens[3] = {anthem_len, BWV846_len, Ievan_polkka_len};
+
 #endif
 
 
