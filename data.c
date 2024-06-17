@@ -33,6 +33,11 @@ typedef unsigned char uint8_t;
 #define PLAY2 2
 #define PLAY3 3
 
+/*
+.value
+  - state: 2 bit
+  - indicator: 14 bit
+*/
 typedef struct _data_t {
 	uint16_t value; // 0xff_ff = 0b1111.1111_1111.1111
 	uint8_t chksum;

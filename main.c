@@ -25,7 +25,7 @@ uint8_t flag; // 不同的按键有不同的标志位值
 uint8_t flag1 = 0; // 中断标志位，每次按键产生一次中断，并开始读取8个数码管的值
 uint8_t Rx2_Buffer[8]={0};
 uint8_t Tx1_Buffer[8]={0};
-uint8_t Rx1_Buffer[1]={0};
+// uint8_t Rx1_Buffer[1]={0};
 
 unsigned char seg7code[10]={ 0xFC,0x0C,0xDA,0xF2,0x66,0xB6,0xBE,0xE0,0xFE,0xE6}; //数码管字根
 void Led(int date);	
@@ -50,12 +50,16 @@ void switch_flag(void);
 
 #define FREQ_DIV ((int)1e6)
 #define FACTOR ((int)(FREQ_DIV/((int)(1e3)))) // FREQ_DIV / 1e3
-// #define UNIT (1/FREQ_DIV)
-// #define REST_RATE 0.05
 #define REST_RATE 5
+// #define REST_RATE 0.05
+// #define UNIT (1/FREQ_DIV)
+
+#define TRANSLATE(read) (0x1C - (read) + 1)
 
 void play_sound(sound s);
 void play_score(sound *sounds, int sounds_len);
+
+void state_wait(void);
 
 int main(void)
 {
@@ -104,36 +108,22 @@ int main(void)
 
 #if 1
 	uint8_t state = STATE(read_data());
-	switch (state)
-	{
-	case WAIT:
-		break;
-
-	default:
-	// case PLAY1:
-	// case PLAY2:
-	// case PLAY3:
-		score_t score = scores[state - 1];
-		uint16_t len = lens[state - 1];
-		// play(score, len);
-	
-		break;
-	}
-
 	while (1)
 	{
-		if(flag1 == 1)
-        {
-            flag1 = 0;
-            I2C_ZLG7290_Read(&hi2c1, 0x71, 0x01, Rx1_Buffer, 1); //读键值  // wrap ################################
-            // DC_Task(Rx1_Buffer[0]);
-
-        }
-        Led(DC_Motor_Data);
-            
-        HAL_Delay(100* FACTOR);
+		switch (state)
+		{
+		case WAIT:
+			state_wait();
+			break;
+		default: // case PLAY1 PLAY2 PLAY3
+			// state_play:
+			sound* score = scores[state - 1];
+			uint16_t len = lens[state - 1];
+			play_score(score, len);
+			break;
+		}
 	}
-	
+
 #else
     while (1)
     {
@@ -185,7 +175,27 @@ void play_score(sound *sounds, int sounds_len)
     }
 }
 
+void state_wait(void)
+{
+    while (1)
+    {
+        if(flag1 == 1)
+        {
+            flag1 = 0;
 
+			uint8_t key_read;
+            I2C_ZLG7290_Read(&hi2c1, 0x71, 0x01, &key_read, 1); //读键值
+			key_read = TRANSLATE(key_read);
+			if (!(1 <= key_read && key_read <= 3))
+			{
+				continue;
+			}
+
+			store_state(key_read);
+        }
+        HAL_Delay(100* FACTOR);
+    }
+}
 
 void SystemClock_Config(void)
 {
@@ -228,6 +238,8 @@ void SystemClock_Config(void)
 	HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
 }
 
+// OUR CODES ENDS HERE
+// ===================================================================
 
 
 void Led(int date) //显示函数
