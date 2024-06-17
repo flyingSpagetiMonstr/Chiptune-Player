@@ -22,6 +22,7 @@
 #define countof(a) (sizeof(a) / sizeof(*(a)))
 
 uint8_t flag; // 不同的按键有不同的标志位值
+uint8_t flag1 = 0; // 中断标志位，每次按键产生一次中断，并开始读取8个数码管的值
 uint8_t Rx2_Buffer[8]={0};
 uint8_t Tx1_Buffer[8]={0};
 uint8_t Rx1_Buffer[1]={0};
@@ -41,8 +42,11 @@ void switch_flag(void);
 // =============================================================================================
 // OUR CODE STARTS HERE
 
+#define WARM_ENABLED
+
 #include "presets.c"
 #include "scores.c"
+#include "data.c"
 
 #define FREQ_DIV ((int)1e6)
 #define FACTOR ((int)(FREQ_DIV/((int)(1e3)))) // FREQ_DIV / 1e3
@@ -80,6 +84,47 @@ int main(void)
     // play_score(BWV846, BWV846_len);
     // play_score(Ievan_polkka, Ievan_polkka_len);
 
+#ifdef WARM_ENABLED
+	if(warm == WARM_MARK)
+	{
+		// warm boot
+		// check_backup(&stat_bkp1, &stat_bkp2, &stat_bkp3, 1);
+		// check_backup(&func_bkp1, &func_bkp2, &func_bkp3, 1);
+	}
+	else
+	{
+		// cold boot
+		warm = WARM_MARK;
+		init_data();
+	}
+
+#endif
+
+#if 1
+	switch (STATE(data_0))
+	{
+	case /* constant-expression */:
+		/* code */
+		break;
+	
+	default:
+		break;
+	}
+	while (1)
+	{
+		if(flag1 == 1)
+        {
+            flag1 = 0;
+            I2C_ZLG7290_Read(&hi2c1, 0x71, 0x01, Rx1_Buffer, 1); //读键值  // wrap ################################
+            // DC_Task(Rx1_Buffer[0]);
+
+        }
+        Led(DC_Motor_Data);
+            
+        HAL_Delay(100* FACTOR);
+	}
+	
+#else
     while (1)
     {
         if(flag1 == 1)
@@ -92,6 +137,7 @@ int main(void)
             
         HAL_Delay(100* FACTOR);
     }
+#endif
 }
 
 void play_sound(sound s)

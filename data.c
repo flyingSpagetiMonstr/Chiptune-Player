@@ -7,17 +7,17 @@ typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
 // ################################
 
-#define WARM_CHK 0x1234ABCD
+#define WARM_MARK 0x1234ABCD
 
-#define R(data) ((data).value & 0xff)
-#define L(data) ((data).value >> 8)
+#define _R(data) ((data).value & 0xff)
+#define _L(data) ((data).value >> 8)
+#define _STORE_CHK(data) (data).chksum = _L(data) ^ _R(data)
 
 // methods for reading from data
 #define STATE(data) ((data).value & 0b11) 
 #define INDICATOR(data) ((data).value >> 2)
 
-#define STORE_CHK(data) (data).chksum = L(data) ^ R(data)
-#define VERIFY_CHK(data) ((data).chksum == (L(data) ^ R(data)))
+#define IS_VALID(data) ((data).chksum == (_L(data) ^ _R(data)))
 
 /*
  -> WAIT (for input)
@@ -42,18 +42,67 @@ data_t data_2 __attribute__((at (0x20018000)));
 
 uint32_t warm __attribute__((at (0x2001C000)));
 
-// methods fro writing/changing data
-void store_state(data_t *data, uint8_t state)
+// state = indicator = 0
+void init_data(void)
+{
+	data_0.value = data_0.chksum = 0;
+	data_1.value = data_1.chksum = 0;
+	data_2.value = data_2.chksum = 0;
+}
+
+void store_state(uint8_t state)
+{
+	_store_state(&data_0, state);
+	_store_state(&data_1, state);
+	_store_state(&data_2, state);
+}
+
+void inc_indicator(void)
+{
+	_inc_indicator(&data_0);
+	_inc_indicator(&data_1);
+	_inc_indicator(&data_2);
+}
+
+data_t read_data(void)
+{
+	uint8_t ptr = &data_0;
+	uint8_t available = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		data_t data = *((data_t*)ptr);
+		if (IS_VALID(data))
+		{
+			available = 1;
+			break;
+		}
+		ptr += 4000;
+	}
+	
+	if (available)
+	{
+		data_t data = *((data_t*)ptr);
+		data_0 = data_1 = data_2 = data;
+		return data;
+	}
+	else
+	{
+		warm = 0;
+		HAL_NVIC_SystemReset();
+	}
+}
+
+void _store_state(data_t *data, uint8_t state)
 {
 	data->value = data->value & ~(0b11);
 	data->value += state;
-	STORE_CHK(*data);
+	_STORE_CHK(*data);
 }
 
-void inc_indicator(data_t *data)
+void _inc_indicator(data_t *data)
 {
 	data->value += 0b100;
-	STORE_CHK(*data);
+	_STORE_CHK(*data);
 }
 
 #endif // DATA_C
