@@ -169,10 +169,17 @@ void play_sound(sound s)
 
 void play_score(sound *sounds, int sounds_len)
 {
-    for (uint16_t i = 0; i < sounds_len; i++)
-    {
+	while (1)
+	{
+		uint16_t i = INDICATOR(read_data());
+		if (i >= sounds_len)
+		{
+			break;
+		}
         play_sound(sounds[i]);
-    }
+
+		inc_indicator();
+	}
 }
 
 void state_wait(void)
@@ -193,7 +200,7 @@ void state_wait(void)
 
 			store_state(key_read);
         }
-        HAL_Delay(100* FACTOR);
+        HAL_Delay(100 * FACTOR);
     }
 }
 
