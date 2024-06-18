@@ -22,7 +22,7 @@
 #define countof(a) (sizeof(a) / sizeof(*(a)))
 
 uint8_t flag; // 不同的按键有不同的标志位值
-uint8_t flag1 = 0; // 中断标志位，每次按键产生一次中断，并开始读取8个数码管的值
+// uint8_t flag1 = 0; // 中断标志位，每次按键产生一次中断，并开始读取8个数码管的值
 uint8_t Rx2_Buffer[8]={0};
 uint8_t Tx1_Buffer[8]={0};
 // uint8_t Rx1_Buffer[1]={0};
