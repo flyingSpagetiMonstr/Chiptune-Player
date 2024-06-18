@@ -44,6 +44,7 @@ void switch_flag(void);
 #include "stdlib.h"
 
 #define WARM_ENABLED
+// feed in HAL_Delay ####################
 
 #include "presets.c"
 #include "scores.c"
@@ -109,6 +110,7 @@ int main(void)
 
 #if 1
 	uint8_t state = 0, last_state = 0;
+	// init dog #################
 
 	while (1)
 	{
@@ -116,6 +118,7 @@ int main(void)
 		seq_check(state, last_state);
 		last_state = state;
 
+		// feed #################
 		// Led(state);
 
 		switch (state)
@@ -236,6 +239,7 @@ void state_wait(void)
         // }
         // HAL_Delay(100 * FACTOR);
 
+		// feed #######
 		Led(0);
     }
 }
