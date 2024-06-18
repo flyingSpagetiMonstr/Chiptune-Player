@@ -116,6 +116,8 @@ int main(void)
 		seq_check(state, last_state);
 		last_state = state;
 
+		// Led(state);
+
 		switch (state)
 		{
 		case WAIT:
@@ -134,16 +136,16 @@ int main(void)
 				sound* score = scores[state - 1];
 			}
 
-			if (rand()%2)
-			{
+			// if (rand()%2)
+			// {
 				play_score(score, len);
 				store_state(WAIT);
-			}
-			else
-			{
-				store_state(WAIT);
-				play_score(score, len);
-			}
+			// }
+			// else
+			// {
+			// 	store_state(WAIT);
+			// 	play_score(score, len);
+			// }
 			break;
 		}
 	}
@@ -195,7 +197,9 @@ void play_score(sound *sounds, int sounds_len)
 {
 	while (1)
 	{
-		uint16_t i = INDICATOR(read_data());
+		uint16_t data = read_data();
+		uint16_t i = INDICATOR(data);
+
 		if (i >= sounds_len)
 		{
 			break;
@@ -203,6 +207,8 @@ void play_score(sound *sounds, int sounds_len)
         play_sound(sounds[i]);
 
 		inc_indicator();
+
+		Led(STATE(data));
 	}
 }
 
@@ -229,6 +235,8 @@ void state_wait(void)
 			}
         // }
         // HAL_Delay(100 * FACTOR);
+
+		Led(0);
     }
 }
 
