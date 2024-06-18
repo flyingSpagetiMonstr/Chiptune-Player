@@ -154,7 +154,7 @@ Ievan_polkka_content = [
 Ievan_polkka = Score(Ievan_polkka_content, ["B"], names[2])
 
 
-def get_data(score: Score):
+def get_data(score: Score, factor: int):
     template = """
 sound {name}[] = {{
     {content}
@@ -170,7 +170,7 @@ sound {name}[] = {{
             note = elem[0].value
             if any(char in elem[0].name for char in score.go_flat):
                 note -= 1
-            content += elem_template.format(note, int(elem[1] * FREQ_DIV * 0.8))
+            content += elem_template.format(note, int(elem[1] * FREQ_DIV * 0.8 * factor))
         content += "\n    "
     content = content[:-len("\n    ")]
 
@@ -181,8 +181,8 @@ sound {name}[] = {{
     )
     print(result)
 
-get_data(anthem)
+get_data(anthem, 1)
 
-get_data(BWV846)
+get_data(BWV846, 1)
 
-get_data(Ievan_polkka)
+get_data(Ievan_polkka, 0.6)
