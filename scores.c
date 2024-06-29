@@ -1,9 +1,8 @@
 #ifndef SCORES_C
 #define SCORES_C
 
-// typedef unsigned int uint32_t; 
-// typedef unsigned short uint16_t; 
-// typedef unsigned char uint8_t; 
+// ============================================================================================
+// SCORE DATA
 
 const uint16_t periods[] = {0, 15289, 14430, 13620, 12856, 12134, 11453, 10810, 10204, 9631, 9090, 8580, 8099, 7644, 7215, 6810, 6428, 6067, 5726, 5405, 5102, 4815, 4545, 4290, 4049, 3822, 3607, 3405, 3214, 3033, 2863, 2702, 2551, 2407, 2272, 2145, 2024, 1911, 1803, 1702, 1607, 1516, 1431, 1351, 1275, 1203, 1136, 1072, 1012};
 
@@ -16,8 +15,6 @@ typedef struct _sound
 
 #define _BWV846
 #define IEVAN_POLKKA
-
-// =========================================================
 
 sound anthem[] = {
     {40, 2400000}, { 0,  200000}, {35,  200000},
@@ -33,9 +30,6 @@ sound anthem[] = {
 };
 uint16_t const anthem_len = sizeof(anthem)/sizeof(sound);
 
-
-// =========================================================
-
 #ifdef _BWV846
 sound BWV846[] = {
     {25,  200000}, {29,  200000}, {32,  200000}, {37,  200000}, {41,  200000}, {32,  200000}, {37,  200000}, {41,  200000},
@@ -46,14 +40,10 @@ sound BWV846[] = {
     {24,  200000}, {28,  200000}, {32,  200000}, {38,  200000}, {42,  200000}, {32,  200000}, {38,  200000}, {42,  200000},
     {00, 2000000}
 };
-
 uint16_t const BWV846_len = sizeof(BWV846)/sizeof(sound);
-
 #endif
 
-// =========================================================
 #ifdef IEVAN_POLKKA
-
 sound Ievan_polkka[] = {
     {46,  240000}, {46,  240000}, {44,  240000}, {42,  120000}, {42,  120000}, {41,  240000}, {37,  120000}, {37,  360000}, {41,  240000},
     {44,  240000}, {44,  120000}, {44,  120000}, {42,  240000}, {41,  240000}, {42,  240000}, {38,  240000}, {38,  240000}, {42,  240000},
@@ -69,33 +59,27 @@ sound Ievan_polkka[] = {
     {44,  120000}, {44,  120000}, {44,  120000}, {44,  120000}, {42,  240000}, {41,  240000}, {42,  240000}, {39,  120000}, {39,  600000},
     {00, 2000000}
 };
-
 uint16_t const Ievan_polkka_len = sizeof(Ievan_polkka)/sizeof(sound);
 
 typedef sound *score_t;
-
 score_t scores[3] = {anthem, BWV846, Ievan_polkka};
 uint16_t lens[3] = {anthem_len, BWV846_len, Ievan_polkka_len};
-
 #endif
 
+// END OF SCORE DATA
 // ============================================================================================
 
-#define FREQ_DIV ((int)1e6)
+#define FREQ_DIV ((int)1e6) // accurate clock: 1 us
+#define FACTOR ((int)1e3) // ratio between original clock (1000) and the accurate clock (FREQ_DIV), i.e., FREQ_DIV / 1000
 #define REST_RATE 5
-#define FACTOR ((int)1e3)
-// #define FACTOR ((int)(FREQ_DIV/((int)(1e3)))) // FREQ_DIV / 1e3
-
 
 #include "stm32f4xx_hal_iwdg.h"
-extern uint32_t HCLKFreq;
 extern IWDG_HandleTypeDef pIWDG_Handler[1];
+extern uint32_t HCLKFreq;
 
 
 void play_sound(sound s)
 {
-    // HAL_SYSTICK_Config(HCLKFreq/FREQ_DIV); // increase clock accuracy
-
     uint16_t period = periods[s.note];
     uint16_t half_p = period / 2;
 
@@ -114,12 +98,15 @@ void play_sound(sound s)
         HAL_Delay(half_p);
         HAL_GPIO_WritePin(GPIOG,GPIO_PIN_6,GPIO_PIN_RESET);
         HAL_Delay(half_p);
+
+        if ((HAL_GetTick() - start_time) % (200 * FACTOR))
+        {
+            HAL_IWDG_Refresh(pIWDG_Handler);
+        }
     }
 
     // rest for 5% of duration time
-    HAL_Delay((s.duration / 100) * 5);
-
-    // HAL_SYSTICK_Config(HCLKFreq/1000); // restore clock accuracy
+    HAL_Delay((s.duration / 100) * REST_RATE);
 }
 
 void play_score(sound *sounds, int sounds_len)
@@ -129,22 +116,21 @@ void play_score(sound *sounds, int sounds_len)
 
     while (1)
     {
-        // not here
         if (flag1) {
             flag1 = 0;
-            // 
             break;
+            // stop playing and return to state WAIT if keyboard interrupt comes
         }
 
-        // probbly not here
         uint16_t data = read_data_value();
-        uint16_t i = INDICATOR(data);
+        uint16_t i = INDICATOR(data); // retrieve `i` from data
 
         if (i >= sounds_len)
         {
             break;
         }
 
+        // refresh digital tube
         if ((i%5) == 0)
         {
             HAL_SYSTICK_Config(HCLKFreq/1000); // restore clock accuracy
@@ -152,10 +138,8 @@ void play_score(sound *sounds, int sounds_len)
             HAL_SYSTICK_Config(HCLKFreq/FREQ_DIV); // increase clock accuracy
         }
 
-        HAL_IWDG_Refresh(pIWDG_Handler); // ##################################
         play_sound(sounds[i]); 
 
-        // should not here
         inc_indicator();
     }
 

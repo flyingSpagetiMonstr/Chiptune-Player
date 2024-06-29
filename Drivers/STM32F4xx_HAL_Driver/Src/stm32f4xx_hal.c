@@ -335,12 +335,20 @@ __weak uint32_t HAL_GetTick(void)
   * @param Delay: specifies the delay time length, in milliseconds.
   * @retval None
   */
+
+#include "stm32f4xx_hal_iwdg.h"
+extern IWDG_HandleTypeDef pIWDG_Handler[1];
+
 __weak void HAL_Delay(__IO uint32_t Delay)
 {
   uint32_t tickstart = 0U;
   tickstart = HAL_GetTick();
   while((HAL_GetTick() - tickstart) < Delay)
   {
+    if ((HAL_GetTick() - tickstart) % 200)
+    {
+      HAL_IWDG_Refresh(pIWDG_Handler);
+    }    
   }
 }
 
