@@ -99,7 +99,6 @@ int main(void)
 
     HCLKFreq = HAL_RCC_GetHCLKFreq();
 
-    // IWDG_Starter(pIWDG_Handler, 4, 5000 * 8);
     IWDG_Starter(pIWDG_Handler, 4, 5000);
     // 3.77s is too long, set to 0.5s now #########################
 
@@ -111,7 +110,6 @@ int main(void)
         last_state = state;
 
         Led(state);
-        // HAL_IWDG_Refresh(pIWDG_Handler);
 
         switch (state)
         {
@@ -139,14 +137,7 @@ void state_wait(void)
         
         
         // ################################
-        // HAL_Delay(150) rand()%3
-        // switch (rand()%3)
-        // {
-        //     case 0: HAL_Delay(150); break;
-        //     case 1: HAL_Delay(100); break;
-        //     case 2: HAL_Delay(200); break;
-        //     default: HAL_Delay(50); break;
-        // }
+        HAL_Delay(rand()%200); // don't use switch(rand()%3)
 
         flag1 = 0;
 
@@ -197,7 +188,6 @@ void state_play(uint8_t index)
     sound* score = 0;
     uint16_t len = 0;
 
-    // if (index < 0) index = 0;
     if (index > 2) index = 2; 
 
     if (rand()%2)
