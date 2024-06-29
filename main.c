@@ -135,9 +135,8 @@ void state_wait(void)
             Led(0);
         }
         
-        
         // ################################
-        HAL_Delay(rand()%200); // don't use switch(rand()%3)
+        HAL_Delay(rand()%200);
 
         flag1 = 0;
 
