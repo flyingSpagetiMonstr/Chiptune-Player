@@ -120,12 +120,14 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
+#if 0
   /*Configure GPIO pin : PH15 */
   GPIO_InitStruct.Pin = GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+#endif
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 5, 0);
@@ -142,18 +144,18 @@ uint8_t flag1 = 0;
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	
-	if(GPIO_Pin == GPIO_PIN_5)
-	{
-		
-	  DC_Motor_Count++;
-		
-	}
-	if(GPIO_Pin == GPIO_PIN_13)
-	{
-	   flag1 = 1;
-	}
-	
+    
+    if(GPIO_Pin == GPIO_PIN_5)
+    {
+        
+      DC_Motor_Count++;
+        
+    }
+    if(GPIO_Pin == GPIO_PIN_13)
+    {
+       flag1 = 1;
+    }
+    
 }
 /* USER CODE END 2 */
 
