@@ -50,6 +50,18 @@ void switch_flag(void);
 #include "data.c"
 #include "scores.c"
 
+/*
+ -> WAIT (for input)
+ case 0: WAIT, then PLAY_N
+ case 1: PLAY1, then WAIT
+ case 2: PLAY2, then WAIT
+ case 3: PLAY3, then WAIT
+*/
+#define WAIT 0
+#define PLAY1 1
+#define PLAY2 2
+#define PLAY3 3
+
 void state_wait(void);
 void state_play(uint8_t index);
 
@@ -82,7 +94,6 @@ int main(void)
 
     // ========================================================
     // OUR CODE STARTS HERE
-    srand((unsigned int)HAL_GetTick());
 
     if(warm == WARM_MARK)
     {
@@ -96,9 +107,8 @@ int main(void)
         HAL_Delay(100); // 500 is too big, set to 100 now
     }
 
-
+    srand((unsigned int)HAL_GetTick());
     HCLKFreq = HAL_RCC_GetHCLKFreq();
-
     IWDG_Starter(pIWDG_Handler, 4, 5000);
     // 3.77s is too long, set to 0.5s now #########################
 

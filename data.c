@@ -17,18 +17,6 @@
 #define IS_VALID(data) ((data).chksum == (_L(data) ^ _R(data)))
 
 /*
- -> WAIT (for input)
- case 0: WAIT, then PLAY_N
- case 1: PLAY1, then WAIT
- case 2: PLAY2, then WAIT
- case 3: PLAY3, then WAIT
-*/
-#define WAIT 0
-#define PLAY1 1
-#define PLAY2 2
-#define PLAY3 3
-
-/*
 .value
   - state: 2 bit
   - indicator: 14 bit
