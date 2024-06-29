@@ -42,8 +42,8 @@ void switch_flag(void);
 // =============================================================================================
 // OUR CODE STARTS HERE
 #include "stdlib.h"
-#define HAL_IWDG_MODULE_ENABLED
 
+#define HAL_IWDG_MODULE_ENABLED
 #include "stm32f4xx_hal_iwdg.h"
 #include "..\Drivers\STM32F4xx_HAL_Driver\Src\stm32f4xx_hal_iwdg.c"
 
@@ -110,7 +110,7 @@ int main(void)
     srand((unsigned int)HAL_GetTick());
     HCLKFreq = HAL_RCC_GetHCLKFreq();
     IWDG_Starter(pIWDG_Handler, 4, 5000);
-    // 3.77s is too long, set to 0.5s now #########################
+    // 3.77s is too long, set to 0.5s now
 
 
     uint8_t state = 0, last_state = -1;
@@ -267,7 +267,7 @@ uint8_t keyboard_read(void)
 		}
 		else
 		{
-            warm = WARM_MARK;
+            // warm = WARM_MARK;
             HAL_NVIC_SystemReset();
             // return 0xff;
 		}

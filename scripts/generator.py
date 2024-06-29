@@ -182,7 +182,5 @@ sound {name}[] = {{
     print(result)
 
 get_data(anthem, 1)
-
 get_data(BWV846, 1)
-
 get_data(Ievan_polkka, 0.6)
