@@ -1,8 +1,8 @@
 # 环境
-机箱：华清远见嵌入式ARM实验箱Ⅲ。
-芯片：ARM Cortex-M4微处理器。
-环境：Keil uVision5 on Windows 10。
-项目：基于3_DC_Motor项目文件。
+- 机箱：华清远见嵌入式ARM实验箱Ⅲ。
+- 芯片：ARM Cortex-M4微处理器。
+- 环境：Keil uVision5 on Windows 10。
+- 项目：基于3_DC_Motor项目文件。
 
 # 功能
 
